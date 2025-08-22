@@ -6,3 +6,4 @@ pandas>=1.5.0,<2.2.0
 numpy>=1.21.0,<2.0.0
 xgboost>=1.6.0,<2.0.0
 SQLAlchemy>=1.4.0,<3.0.0
+gunicorn>=20.1.0
