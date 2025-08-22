@@ -559,7 +559,7 @@
             <div class="col-md-4">
                 <div class="summary-card slide-in">
                     <h3>Goals Progress</h3>
-                    <div class="amount">{{ "%.1f"|format((goals|selectattr('progress', 'gt', 0)|list|length / goals|length * 100) if goals|length > 0 else 0) }}%</div>
+                    <div class="amount">{{ "%.1f"|format((goals|sum(attribute='progress') / goals|sum(attribute='target') * 100) if goals|length > 0 else 0) }}%</div>
                 </div>
             </div>
         </div>
@@ -582,7 +582,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="target_amount" class="form-label">Target Amount (₹)</label>
-                                <input type="number" class="form-control" id="target_amount" name="target_amount" step="0.01" min="0" required>
+                                <input type="number" class="form-control" id="target_amount" name="target_amount" step="0.01" min="0.01" required>
                             </div>
                         </div>
                     </div>
