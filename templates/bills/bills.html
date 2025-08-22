@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bills Management - Financial Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+    :root {
+      /* Primary Theme Colors */
+      --primary-main: #4361ee;
+      --primary-dark: #3a0ca3;
+      --primary-light: #4895ef;
+      --primary-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+      
+      /* Secondary Theme Colors */
+      --secondary-main: #4cc9f0;
+      --secondary-dark: #3f37c9;
+      --secondary-light: #f72585;
+      
+      /* Light Theme */
+      --light-bg: #f5f7fb;
+      --light-card: #ffffff;
+      --light-text: #2b2d42;
+      --light-muted: #64748b;
+      --light-border: #e2e8f0;
+      --light-input: #ffffff;
+      --light-table: #ffffff;
+      --light-hover: #f8f9fa;
+      --light-progress: #e2e8f0;
+      
+      /* Dark Theme */
+      --dark-bg: #121212;
+      --dark-card: #1e1e1e;
+      --dark-text: #ffffff;
+      --dark-muted: #94a3b8;
+      --dark-border: #333333;
+      --dark-input: #2d2d2d;
+      --dark-table: #1e1e1e;
+      --dark-hover: #252525;
+      --dark-progress: #333333;
+      
+      /* Current Theme Variables */
+      --current-bg: var(--light-bg);
+      --current-card: var(--light-card);
+      --current-text: var(--light-text);
+      --current-muted: var(--light-muted);
+      --current-border: var(--light-border);
+      --current-input: var(--light-input);
+      --current-table: var(--light-table);
+      --current-hover: var(--light-hover);
+      --current-progress: var(--light-progress);
+      --current-primary: var(--primary-main);
+      --current-primary-dark: var(--primary-dark);
+      --current-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+    }
+
+    [data-theme="dark"] {
+      --current-bg: var(--dark-bg);
+      --current-card: var(--dark-card);
+      --current-text: var(--dark-text);
+      --current-muted: var(--dark-muted);
+      --current-border: var(--dark-border);
+      --current-input: var(--dark-input);
+      --current-table: var(--dark-table);
+      --current-hover: var(--dark-hover);
+      --current-progress: var(--dark-progress);
+      --current-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+        background-color: var(--current-bg);
+        color: var(--current-text);
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        transition: all 0.3s ease;
+        line-height: 1.6;
+    }
+
+    /* Header/Navbar */
+    .dashboard-header {
+      background: var(--current-card);
+      border-bottom: 1px solid var(--current-border);
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .nav-brand h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .nav-link {
+      text-decoration: none;
+      color: var(--current-text);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .nav-link:hover {
+      background: var(--current-hover);
+      color: var(--current-primary);
+    }
+    
+    .nav-link.active {
+      background: var(--primary-gradient);
+      color: white;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem 0;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .page-subtitle {
+        color: var(--current-muted);
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+
+    .card {
+        background: var(--current-card);
+        border: none;
+        border-radius: 15px;
+        box-shadow: var(--current-shadow);
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem 2rem;
+        font-weight: 600;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-control, .form-select {
+        background-color: var(--current-input);
+        color: var(--current-text);
+        border: 2px solid var(--current-border);
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: var(--current-input);
+        color: var(--current-text);
+        border-color: var(--current-primary);
+        box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+        outline: none;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--current-text);
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+        background: var(--primary-gradient);
+        color: white;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+
+    .btn-outline-primary {
+        border: 2px solid var(--current-primary);
+        color: var(--current-primary);
+        background: transparent;
+    }
+
+    .btn-outline-primary:hover {
+        background: var(--current-primary);
+        border-color: var(--current-primary);
+        color: white;
+    }
+
+    .btn-outline-danger {
+        border: 2px solid #ef4444;
+        color: #ef4444;
+        background: transparent;
+    }
+
+    .btn-outline-danger:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: white;
+    }
+
+    /* Table Styling */
+    .table {
+        background: var(--current-table);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 0;
+    }
+
+    .table th {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .table td {
+        border: none;
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--current-border);
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background: var(--current-hover);
+        transform: scale(1.01);
+    }
+
+    /* Status Badges */
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+
+    .badge-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+
+    .badge-info {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+    }
+
+    /* Summary Cards */
+    .summary-card {
+        background: var(--current-card);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: var(--current-shadow);
+        transition: transform 0.3s ease;
+        border-left: 4px solid var(--current-primary);
+    }
+
+    .summary-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .summary-card h3 {
+        color: var(--current-muted);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-card .amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--current-text);
+        margin-bottom: 0;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: var(--current-card);
+        border: 2px solid var(--current-border);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--current-shadow);
+    }
+
+    .theme-toggle:hover {
+        transform: scale(1.1);
+        border-color: var(--current-primary);
+    }
+
+    .theme-toggle i {
+        font-size: 1.2rem;
+        color: var(--current-text);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .nav-links {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .table-responsive {
+            border-radius: 12px;
+        }
+    }
+
+    /* Animation Classes */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-in {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(0); }
+    }
+
+    /* Flash Messages */
+    .alert {
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        color: #065f46;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        color: #1e40af;
+    }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <i class="bi bi-moon-fill" id="theme-icon"></i>
+    </div>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="bi bi-receipt-cutoff" style="font-size: 1.5rem; color: var(--current-primary);"></i>
+                    <h2>Bills Management</h2>
+                </div>
+                <nav class="nav-links">
+                    <a href="/" class="nav-link">
+                        <i class="bi bi-house"></i> Dashboard
+                    </a>
+                    <a href="/expenses" class="nav-link">
+                        <i class="bi bi-cash-stack"></i> Expenses
+                    </a>
+                    <a href="/bills" class="nav-link active">
+                        <i class="bi bi-receipt-cutoff"></i> Bills
+                    </a>
+                    <a href="/savings" class="nav-link">
+                        <i class="bi bi-piggy-bank"></i> Savings
+                    </a>
+                    <a href="/investment/portfolio" class="nav-link">
+                        <i class="bi bi-graph-up"></i> Investments
+                    </a>
+                    <a href="/debts" class="nav-link">
+                        <i class="bi bi-credit-card"></i> Debts
+                    </a>
+                    <a href="/logout" class="nav-link">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header fade-in">
+            <h1 class="page-title">Bills Management</h1>
+            <p class="page-subtitle">Track and manage your monthly bills and payments</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} fade-in">
+                        <i class="bi bi-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' if category == 'success' else 'info-circle' }} me-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="summary-card slide-in">
+                    <h3>Total Bills</h3>
+                    <div class="amount">{{ bills|length }}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="summary-card slide-in">
+                    <h3>Unpaid Amount</h3>
+                    <div class="amount">₹{{ bills|selectattr('status', 'equalto', 'unpaid')|sum(attribute='amount')|round(2) }}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="summary-card slide-in">
+                    <h3>Overdue Bills</h3>
+                    <div class="amount">{{ bills|selectattr('status', 'equalto', 'unpaid')|selectattr('due_date', 'lt', today)|list|length }}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="summary-card slide-in">
+                    <h3>Paid This Month</h3>
+                    <div class="amount">₹{{ bills|selectattr('status', 'equalto', 'paid')|sum(attribute='amount')|round(2) }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Bill Form -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <i class="bi bi-plus-circle"></i>
+                Add New Bill
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_bill') }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Bill Title</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Amount (₹)</label>
+                                <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="due_date" class="form-label">Due Date</label>
+                                <input type="date" class="form-control" id="due_date" name="due_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category</label>
+                                <select class="form-select" id="category" name="category">
+                                    <option value="Bills">Bills</option>
+                                    <option value="Housing">Housing</option>
+                                    <option value="Utilities">Utilities</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Insurance">Insurance</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description" name="description">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Add Bill
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <i class="bi bi-lightning"></i>
+                Quick Actions
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form method="POST" action="{{ url_for('generate_monthly_bills') }}" style="display: inline;">
+                            <button type="submit" class="btn btn-success me-2">
+                                <i class="bi bi-calendar-plus"></i> Generate Monthly Bills
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="/" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bills Table -->
+        <div class="card fade-in">
+            <div class="card-header">
+                <i class="bi bi-list-ul"></i>
+                All Bills
+            </div>
+            <div class="card-body p-0">
+                {% if bills %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bill in bills %}
+                                    <tr class="fade-in">
+                                        <td>
+                                            <strong>{{ bill.title }}</strong>
+                                            {% if bill.description %}
+                                                <br><small class="text-muted">{{ bill.description }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>₹{{ "%.2f"|format(bill.amount) }}</strong>
+                                        </td>
+                                        <td>
+                                            {% if bill.due_date < today and bill.status == 'unpaid' %}
+                                                <span class="text-danger fw-bold">{{ bill.due_date }}</span>
+                                                <br><small class="text-danger">Overdue</small>
+                                            {% else %}
+                                                {{ bill.due_date }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-info">{{ bill.category }}</span>
+                                        </td>
+                                        <td>
+                                            {% if bill.status == 'paid' %}
+                                                <span class="badge badge-success">Paid</span>
+                                            {% elif bill.due_date < today %}
+                                                <span class="badge badge-danger">Overdue</span>
+                                            {% else %}
+                                                <span class="badge badge-warning">Unpaid</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if bill.status == 'unpaid' %}
+                                                <form method="POST" action="{{ url_for('pay_bill', bill_id=bill.id) }}" style="display: inline;">
+                                                    <button type="submit" class="btn btn-success btn-sm me-1" onclick="return confirm('Mark this bill as paid?')">
+                                                        <i class="bi bi-check-circle"></i> Pay
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                            <form method="POST" action="{{ url_for('delete_bill', bill_id=bill.id) }}" style="display: inline;">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this bill?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-receipt-cutoff" style="font-size: 3rem; color: var(--current-muted);"></i>
+                        <h4 class="mt-3">No bills found</h4>
+                        <p class="text-muted">Add your first bill to get started!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme Toggle Functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeIcon.className = 'bi bi-moon-fill';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'bi bi-sun-fill';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'bi bi-sun-fill';
+            }
+        });
+
+        // Auto-hide flash messages
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

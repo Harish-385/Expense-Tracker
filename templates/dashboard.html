@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Financial Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      /* Primary Theme Colors (Dashboard) */
+      --primary-main: #4361ee;
+      --primary-dark: #3a0ca3;
+      --primary-light: #4895ef;
+      
+      /* Secondary Theme Colors (Other Pages) */
+      --secondary-main: #4cc9f0;
+      --secondary-dark: #3f37c9;
+      --secondary-light: #f72585;
+      
+      /* Light Theme */
+      --light-bg: #f5f7fb;
+      --light-card: #ffffff;
+      --light-text: #2b2d42; /* Dark gray instead of pure black */
+      --light-muted: #64748b;
+      --light-border: #e2e8f0;
+      --light-input: #ffffff;
+      --light-table: #ffffff;
+      --light-hover: #f8f9fa;
+      --light-progress: #e2e8f0;
+      
+      /* Dark Theme */
+      --dark-bg: #121212;
+      --dark-card: #1e1e1e;
+      --dark-text: #ffffff; /* Changed to pure white */
+      --dark-muted: #94a3b8; /* Fixed color value */
+      --dark-border: #333333;
+      --dark-input: #2d2d2d;
+      --dark-table: #1e1e1e;
+      --dark-hover: #252525;
+      --dark-progress: #333333;
+      
+      /* Current Theme Variables */
+      --current-bg: var(--light-bg);
+      --current-card: var(--light-card);
+      --current-text: var(--light-text);
+      --current-muted: var(--light-muted);
+      --current-border: var(--light-border);
+      --current-input: var(--light-input);
+      --current-table: var(--light-table);
+      --current-hover: var(--light-hover);
+      --current-progress: var(--light-progress);
+      --current-primary: var(--primary-main);
+      --current-primary-dark: var(--primary-dark);
+      --current-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+    }
+
+    [data-theme="dark"] {
+      --current-bg: var(--dark-bg);
+      --current-card: var(--dark-card);
+      --current-text: var(--dark-text);
+      --current-muted: var(--dark-muted);
+      --current-border: var(--dark-border);
+      --current-input: var(--dark-input);
+      --current-table: var(--dark-table);
+      --current-hover: var(--dark-hover);
+      --current-progress: var(--dark-progress);
+      --current-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      background-color: var(--current-bg);
+      color: var(--current-text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.6;
+    }
+    
+    /* NEW: Simplified Header/Navbar */
+    .dashboard-header {
+      background: var(--current-card);
+      border-bottom: 1px solid var(--current-border);
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .nav-brand h2 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    .nav-brand i {
+      color: var(--primary-main);
+      font-size: 1.8rem;
+    }
+    
+    .nav-tagline {
+      font-size: 0.9rem;
+      color: var(--current-muted);
+      margin-left: 0.5rem;
+    }
+    
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .theme-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--current-text);
+      cursor: pointer;
+      font-size: 1.4rem;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .theme-toggle-btn:hover {
+      background: rgba(67, 97, 238, 0.1);
+      transform: scale(1.1);
+    }
+    
+    .logout-btn {
+      background: transparent;
+      border: 1px solid var(--current-muted);
+      color: var(--current-text);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(220, 53, 69, 0.1);
+      border-color: #dc3545;
+      color: #dc3545;
+      transform: translateY(-2px);
+    }
+    
+    .nav-pills {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    
+    .nav-pills .nav-link {
+      color: var(--current-muted);
+      font-weight: 500;
+      transition: color 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-pills .nav-link.active {
+      background-color: var(--current-primary);
+      color: white;
+    }
+    
+    .nav-pills .nav-link:hover:not(.active) {
+      background-color: var(--current-hover);
+    }
+    
+    .card {
+      background: var(--current-card);
+      border: none;
+      border-radius: 0.75rem;
+      box-shadow: var(--current-shadow);
+      margin-bottom: 2rem;
+      transition: transform 0.2s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+      color: var(--current-text);
+    }
+
+    [data-theme="dark"] .card {
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .card-header,
+    [data-theme="dark"] .card-body {
+      color: #ffffff;
+    }
+    
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0.5rem 2rem rgba(33, 40, 50, 0.2);
+    }
+    
+    .card-header {
+      background-color: var(--current-card);
+      border-bottom: 1px solid var(--current-border);
+      font-weight: 600;
+      padding: 1.25rem 1.5rem;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+      font-size: 1.1rem;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    .alloc-card {
+      min-height: 160px;
+      border-left: 5px solid var(--current-primary);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+    }
+    
+    .alloc-card h6 {
+      font-size: 0.95rem;
+      color: var(--current-muted);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .alloc-card .amount {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--current-text);
+      margin: 0.75rem 0;
+    }
+    
+    .alloc-card .note {
+      font-size: 0.85rem;
+      color: var(--current-muted);
+      margin-top: auto;
+      opacity: 0.8;
+    }
+    
+    .progress {
+      height: 10px;
+      border-radius: 5px;
+      background-color: var(--current-progress);
+      margin-top: 0.5rem;
+    }
+    
+    .progress-bar {
+      background-color: var(--current-primary);
+    }
+    
+    .table {
+      font-size: 0.9rem;
+      background-color: var(--current-table);
+      color: var(--current-text);
+      margin-top: 1rem;
+    }
+    
+    .table th {
+      font-weight: 600;
+      color: var(--current-muted);
+      border-top: none;
+      background-color: var(--current-card);
+      padding: 1rem;
+    }
+    
+    .table td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+    }
+    
+    .table-hover tbody tr:hover {
+      background-color: var(--current-hover);
+    }
+    
+    .badge {
+      font-weight: 500;
+      padding: 0.4em 0.75em;
+      font-size: 0.8rem;
+      border-radius: 0.375rem;
+    }
+    
+    .form-control, .form-select {
+      background-color: var(--current-input);
+      border: 1px solid var(--current-border);
+      color: var(--current-text);
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.9rem;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+      font-size: 0.95rem;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      background-color: var(--current-input);
+      color: var(--current-text);
+      border-color: var(--current-primary);
+      box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+    }
+    
+    .input-group-text {
+      background-color: var(--current-input);
+      border: 1px solid var(--current-border);
+      color: var(--current-text);
+      padding: 0.6rem 0.9rem;
+    }
+    
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--current-primary);
+      border-color: var(--current-primary);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--current-primary-dark);
+      border-color: var(--current-primary-dark);
+      transform: translateY(-1px);
+    }
+    
+    .btn-outline-secondary {
+      color: var(--current-text);
+      border-color: var(--current-border);
+    }
+    
+    .btn-outline-secondary:hover {
+      background-color: var(--current-border);
+      color: var(--current-text);
+    }
+    
+    .text-primary {
+      color: var(--current-primary) !important;
+    }
+    
+    .text-muted {
+      color: var(--current-muted) !important;
+    }
+    
+    .alert-light {
+      background-color: var(--current-card);
+      border-color: var(--current-border);
+      color: var(--current-text);
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+    
+    .summary-card {
+      background: var(--current-card);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      transition: background-color 0.3s ease;
+      box-shadow: var(--current-shadow);
+    }
+    
+    .summary-card h6 {
+      font-size: 1rem;
+      color: var(--current-muted);
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+    
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--current-border);
+    }
+    
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+    
+    .category-progress {
+      margin-bottom: 1rem;
+    }
+    
+    .category-progress .label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--current-muted);
+    }
+    
+    /* Enhanced spacing */
+    .form-label {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .row.g-3 > [class^="col-"] {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    
+    .alert {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+    }
+    
+    .mt-2 {
+      margin-top: 1rem !important;
+    }
+    
+    .mt-3 {
+      margin-top: 1.5rem !important;
+    }
+    
+    .mb-2 {
+      margin-bottom: 1rem !important;
+    }
+    
+    .mb-3 {
+      margin-bottom: 1.5rem !important;
+    }
+    
+    .py-2 {
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+    }
+    
+    .py-3 {
+      padding-top: 1.5rem !important;
+      padding-bottom: 1.5rem !important;
+    }
+    
+    /* Custom spacing classes */
+    .space-above {
+      margin-top: 2rem;
+    }
+    
+    .space-below {
+      margin-bottom: 2rem;
+    }
+    
+    .section-gap {
+      margin-bottom: 3rem;
+    }
+    
+    /* NEW: Improved button spacing */
+    .btn-spacing {
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    
+    .button-row .btn {
+      flex: 1;
+      min-width: 140px;
+    }
+    
+    /* NEW: Improved form spacing */
+    .form-spacing {
+      margin-bottom: 1.5rem;
+    }
+    
+    /* NEW: Card header improvements */
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    /* NEW: Responsive improvements */
+    @media (max-width: 768px) {
+      .button-row .btn {
+        min-width: 120px;
+        flex: 1 0 calc(50% - 0.75rem);
+      }
+      
+      .dashboard-header {
+        padding: 1rem 0;
+      }
+      
+      .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      
+      .nav-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .nav-pills {
+        overflow-x: auto;
+        width: 100%;
+        padding-bottom: 0.5rem;
+      }
+      
+      .card-header {
+        padding: 1rem;
+      }
+      
+      .card-body {
+        padding: 1rem;
+      }
+      
+      .alloc-card {
+        padding: 1rem;
+        min-height: 140px;
+      }
+      
+      .alloc-card .amount {
+        font-size: 1.75rem;
+      }
+    }
+    
+    /* NEW: Extra small device adjustments */
+    @media (max-width: 576px) {
+      .button-row .btn {
+        flex: 1 0 100%;
+      }
+      
+      .nav-brand h2 {
+        font-size: 1.25rem;
+      }
+      
+      .nav-tagline {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- MODIFIED HEADER SECTION -->
+<div class="dashboard-header">
+  <div class="container">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <i class="bi bi-graph-up"></i>
+        <h2>Financial Dashboard</h2>
+        <span class="nav-tagline">Track your income, expenses, and savings</span>
+      </div>
+      
+      <div class="nav-controls">
+        <ul class="nav-pills">
+          <li><a class="nav-link active" href="/expenses"><i class="bi bi-cash-stack"></i>Expenses</a></li>
+          <li><a class="nav-link" href="/bills"><i class="bi bi-receipt"></i>Bills</a></li>
+          <li><a class="nav-link" href="/savings"><i class="bi bi-piggy-bank"></i>Savings</a></li>
+          <li><a class="nav-link" href="/investment/portfolio"><i class="bi bi-graph-up-arrow"></i>Investments</a></li>
+          <li><a class="nav-link" href="/debts"><i class="bi bi-credit-card"></i>Debts</a></li>
+        </ul>
+        
+        <button class="theme-toggle-btn" id="themeToggle" title="Toggle theme">
+          <i class="bi bi-moon"></i>
+        </button>
+        
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+          <i class="bi bi-box-arrow-right"></i>
+          Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show space-below" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Income Setting Card -->
+  <div class="card space-below">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span><i class="bi bi-currency-dollar me-2"></i>Monthly Income</span>
+    </div>
+    <div class="card-body">
+      <form id="incomeForm" method="post" action="/set_income" class="row g-3 align-items-end">
+        <div class="col-md-4 form-spacing">
+          <label class="form-label fw-semibold small">Monthly Income Amount</label>
+          <div class="input-group">
+            <span class="input-group-text">₹</span>
+            <input type="number" step="0.01" name="monthlyIncome" id="monthlyIncome" class="form-control"
+                   value="{{ monthly_income or 0 }}">
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="button-row">
+            <button class="btn btn-primary">
+              <i class="bi bi-save me-1"></i>Set Monthly Income
+            </button>
+            <form method="POST" action="{{ url_for('process_monthly_remainder') }}" class="d-inline">
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-arrow-repeat me-1"></i>Process Remainder
+              </button>
+            </form>
+            <form method="POST" action="{{ url_for('manual_bill_reminder_check') }}" class="d-inline">
+              <button type="submit" class="btn btn-warning">
+                <i class="bi bi-bell me-1"></i>Check Bills
+              </button>
+            </form>
+            <form method="POST" action="{{ url_for('toggle_daily_reminders') }}" class="d-inline">
+              <button type="submit" class="btn btn-info">
+                <i class="bi bi-toggle-on me-1"></i>Toggle Reminders
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-12 mt-3">
+          <div class="alert alert-light small mb-0">
+            <i class="bi bi-info-circle me-1"></i> Default split: Needs 50% / Wants 30% / Savings 20%
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Salary Allocation Card -->
+  <div class="card space-below">
+    <div class="card-header">
+      <i class="bi bi-pie-chart me-2"></i>Salary Allocation
+    </div>
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-md-8">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Needs (%)</label>
+              <input id="needPercent" type="number" class="form-control" value="50" min="0" max="100">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Wants (%)</label>
+              <input id="wantsPercent" type="number" class="form-control" value="30" min="0" max="100">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold small">Savings (%)</label>
+              <input id="savingsPercent" type="number" class="form-control" value="20" min="0, max=100">
+            </div>
+            <div class="col-md-12 mt-3">
+              <div class="button-row">
+                <button id="applySplitBtn" class="btn btn-primary">
+                  <i class="bi bi-check-circle me-1"></i>Apply Allocation
+                </button>
+                <button id="resetSplitBtn" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-counterclockwise me-1"></i>Reset to Default
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="summary-card h-100">
+            <h6><i class="bi bi-pie-chart-fill me-1"></i>Current Allocation</h6>
+            <div class="summary-item">
+              <span>Needs:</span>
+              <strong>₹<span id="alloc_need">{{ portfolio.needs | default(0) }}</span></strong>
+            </div>
+            <div class="summary-item">
+              <span>Wants:</span>
+              <strong>₹<span id="alloc_wants">{{ portfolio.wants | default(0) }}</span></strong>
+            </div>
+            <div class="summary-item">
+              <span>Savings:</span>
+              <strong>₹<span id="alloc_savings">{{ portfolio.savings | default(0) }}</span></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Allocation Cards -->
+  <div class="row g-4 space-below">
+    <div class="col-md-4">
+      <div class="alloc-card card h-100">
+        <h6><i class="bi bi-house me-1"></i>Needs</h6>
+        <div class="amount">₹<span id="card_need">{{ portfolio.needs | default(0) }}</span></div>
+        <div class="note">Essential expenses mapped to investments</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="alloc-card card h-100">
+        <h6><i class="bi bi-bag me-1"></i>Wants</h6>
+        <div class="amount">₹<span id="card_wants">{{ portfolio.wants | default(0) }}</span></div>
+        <div class="note">Discretionary spending allocation</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="alloc-card card h-100">
+        <h6><i class="bi bi-safe me-1"></i>Savings</h6>
+        <div class="amount">₹<span id="card_savings">{{ portfolio.savings | default(0) }}</span></div>
+        <div class="note">Funds allocated for future goals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Budgets -->
+  <div class="card space-below">
+    <div class="card-header">
+      <i class="bi bi-tags me-2"></i>Category Budgets
+    </div>
+    <div class="card-body">
+      <form method="post" action="/set_budgets" class="row g-4">
+        {% for cat, val in category_budgets.items() %}
+        <div class="col-md-3">
+          <label class="form-label fw-semibold small">{{ cat }}</label>
+          <div class="input-group">
+            <span class="input-group-text">₹</span>
+            <input class="form-control" name="budget_{{ cat }}" value="{{ val*10 }}">
+          </div>
+          
+          <!-- Progress for this category -->
+          {% if category_totals.get(cat, 0) > 0 %}
+          <div class="category-progress mt-2">
+            <div class="label">
+              <span>Spent: ₹{{ category_totals.get(cat, 0) }}</span>
+              <span>{{ ((category_totals.get(cat, 0)/val)*100)|round(1) if val else 0 }}%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" 
+                   style="width: {% if val %}{{ (category_totals.get(cat, 0)/val*100)|round(1) }}{% else %}0{% endif %}%" 
+                   aria-valuenow="{% if val %}{{ (category_totals.get(cat, 0)/val*100)|round(1) }}{% else %}0{% endif %}" 
+                   aria-valuemin="0" 
+                   aria-valuemax="100"></div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        <div class="col-md-12 mt-3">
+          <button class="btn btn-primary">
+            <i class="bi bi-save me-1"></i>Save Budgets
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Recent Activity and Summary -->
+  <div class="row space-below">
+    <div class="col-lg-8">
+      <div class="card h-100">
+        <div class="card-header">
+          <i class="bi bi-clock-history me-2"></i>Recent Transactions
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th class="text-end">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for e in recent_expenses %}
+                  <tr>
+                    <td>{{ e.date }}</td>
+                    <td><span class="badge bg-light text-dark">{{ e.category }}</span></td>
+                    <td>
+                      {% if e.expense_type == 'need' %}
+                        <span class="badge bg-success">Need</span>
+                      {% elif e.expense_type == 'want' %}
+                        <span class="badge bg-warning text-dark">Want</span>
+                      {% else %}
+                        <span class="badge bg-secondary">Other</span>
+                      {% endif %}
+                    <td>{{ e.description }}</td>
+                    <td class="text-end fw-semibold text-danger">-₹{{ -e.amount }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="summary-card">
+        <h6><i class="bi bi-calendar-month me-1"></i>Current Month Summary</h6>
+        <div class="summary-item">
+          <span>Monthly Income:</span>
+          <strong>₹{{ monthly_income }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>Estimated Savings:</span>
+          <strong class="text-success">₹{{ current_savings }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>Expenses:</span>
+          <strong class="text-danger">₹{{ monthly_income - current_savings }}</strong>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h6><i class="bi bi-arrow-repeat me-1"></i>Monthly Remainder</h6>
+        {% if monthly_remainder.needs > 0 or monthly_remainder.wants > 0 or monthly_remainder.savings > 0 %}
+          <div class="summary-item">
+            <span>Needs Remainder:</span>
+            <strong class="text-success">₹{{ "%.2f"|format(monthly_remainder.needs) }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Wants Remainder:</span>
+            <strong class="text-success">₹{{ "%.2f"|format(monthly_remainder.wants) }}</strong>
+          </div>
+          <div class="summary-item">
+            <span>Savings Remainder:</span>
+            <strong class="text-success">₹{{ "%.2f"|format(monthly_remainder.savings) }}</strong>
+          </div>
+        {% else %}
+          <div class="alert alert-light small mb-0">
+            <i class="bi bi-info-circle me-1"></i> No remainder from previous month
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="summary-card">
+        <h6><i class="bi bi-bell me-1"></i>Bill Reminders</h6>
+        {% if overdue_count > 0 or upcoming_count > 0 %}
+          {% if overdue_count > 0 %}
+            <div class="summary-item">
+              <span>Overdue Bills:</span>
+              <strong class="text-danger">{{ overdue_count }} bill(s)</strong>
+            </div>
+          {% endif %}
+          {% if upcoming_count > 0 %}
+            <div class="summary-item">
+              <span>Upcoming Bills:</span>
+              <strong class="text-warning">{{ upcoming_count }} bill(s)</strong>
+            </div>
+          {% endif %}
+          <div class="summary-item">
+            <span>Total Unpaid:</span>
+            <strong class="text-danger">₹{{ "%.2f"|format(unpaid_total) }}</strong>
+          </div>
+          <div class="mt-3">
+            <a href="/bills" class="btn btn-sm btn-outline-primary w-100">
+              <i class="bi bi-eye me-1"></i>View All Bills
+            </a>
+          </div>
+        {% else %}
+          <div class="alert alert-light small mb-0">
+            <i class="bi bi-check-circle me-1"></i> All bills are up to date
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="summary-card">
+        <h6><i class="bi bi-tag me-1"></i>Category Spending</h6>
+        {% if category_totals %}
+          {% for k, v in category_totals.items() %}
+            <div class="summary-item">
+              <span>{{ k }}:</span>
+              <div>
+                <span class="fw-semibold">₹{{ v }}</span>
+                <span class="text-muted small ms-2">/ ₹{{ category_budgets.get(k, '—') }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="alert alert-light small mb-0">
+            <i class="bi bi-info-circle me-1"></i> No category expenses recorded yet
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Check for saved theme preference or use system preference
+    const currentTheme = localStorage.getItem('theme') || 
+                        (prefersDarkScheme.matches ? 'dark' : 'light');
+    
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
+      themeToggle.setAttribute('title', 'Toggle light mode');
+    }
+    
+    themeToggle.addEventListener('click', function() {
+      if (document.documentElement.getAttribute('data-theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeToggle.innerHTML = '<i class="bi bi-moon"></i>';
+        themeToggle.setAttribute('title', 'Toggle dark mode');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
+        themeToggle.setAttribute('title', 'Toggle light mode');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Default split values
+    const DEFAULT_SPLIT = {
+        needs: 50,
+        wants: 30,
+        savings: 20
+    };
+
+    // Function to update input values
+    function updateInputs(split) {
+        document.getElementById('needPercent').value = split.needs;
+        document.getElementById('wantsPercent').value = split.wants;
+        document.getElementById('savingsPercent').value = split.savings;
+    }
+
+    // Function to apply split
+    async function applySplit(needP, wantsP, savingsP) {
+        try {
+            const res = await fetch('/save_split', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    needPercent: needP,
+                    wantsPercent: wantsP,
+                    savingsPercent: savingsP
+                })
+            });
+            const j = await res.json();
+            
+            if (j.error) {
+                alert(j.error);
+                return false;
+            }
+
+            // Update allocation displays
+            document.getElementById('card_need').innerText = j.needs;
+            document.getElementById('card_wants').innerText = j.wants;
+            document.getElementById('card_savings').innerText = j.savings;
+            
+            // Update allocation summary
+            document.getElementById('alloc_need').innerText = j.needs;
+            document.getElementById('alloc_wants').innerText = j.wants;
+            document.getElementById('alloc_savings').innerText = j.savings;
+            
+            return true;
+        } catch (error) {
+            alert('An error occurred while saving the allocation');
+            console.error(error);
+            return false;
+        }
+    }
+
+    // Apply Split button handler
+    document.getElementById('applySplitBtn').addEventListener('click', async function(e) {
+        e.preventDefault();
+        const need = parseFloat(document.getElementById('needPercent').value) || 0;
+        const wants = parseFloat(document.getElementById('wantsPercent').value) || 0;
+        const savings = parseFloat(document.getElementById('savingsPercent').value) || 0;
+        
+        const total = Math.round((need + wants + savings) * 100) / 100;
+        if (Math.abs(total - 100) > 0.01) {
+            alert(`Percentages must sum to 100. Current sum: ${total}`);
+            return;
+        }
+
+        await applySplit(need, wants, savings);
+    });
+
+    // Reset button handler
+    document.getElementById('resetSplitBtn').addEventListener('click', async function(e) {
+        e.preventDefault();
+        updateInputs(DEFAULT_SPLIT);
+        await applySplit(DEFAULT_SPLIT.needs, DEFAULT_SPLIT.wants, DEFAULT_SPLIT.savings);
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Profile - Expense Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --text-color: #2b2d42;
+            --bg-color: #f5f7fb;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #ffd700;
+            --input-bg: #ffffff;
+            --input-border: #ced4da;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #4895ef;
+            --secondary-color: #4361ee;
+            --text-color: #f8f9fa;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #ffd700;
+            --input-bg: #2d2d2d;
+            --input-border: #444444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.2rem; }
+        h2 { font-size: 1.6rem; }
+        h3 { font-size: 1.3rem; }
+
+        .card {
+            background: var(--card-bg);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+        }
+
+        .form-label {
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            border: none;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 5px;
+            display: flex;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle i {
+            padding: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .recommendation-card {
+            background: linear-gradient(135deg, var(--success-color), var(--primary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-card h4 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .allocation-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .allocation-item .percentage {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .risk-level {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .risk-conservative {
+            background: #4cc9f0;
+            color: white;
+        }
+
+        .risk-moderate {
+            background: #ffd700;
+            color: #333;
+        }
+
+        .risk-aggressive {
+            background: #f72585;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="theme-toggle" id="themeToggle">
+            <i class="theme-icon">☀️</i>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-shield-alt me-2"></i>Risk Profile</h1>
+            <div>
+                <a href="{{ url_for('investment_portfolio') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Portfolio
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user-check me-2"></i>Risk Assessment
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" id="riskForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="risk_tolerance" class="form-label">Risk Tolerance</label>
+                                    <select class="form-select" id="risk_tolerance" name="risk_tolerance" required>
+                                        <option value="conservative" {{ 'selected' if profile and profile.risk_tolerance == 'conservative' else '' }}>Conservative (Low Risk)</option>
+                                        <option value="moderate" {{ 'selected' if profile and profile.risk_tolerance == 'moderate' else '' }}>Moderate (Balanced)</option>
+                                        <option value="aggressive" {{ 'selected' if profile and profile.risk_tolerance == 'aggressive' else '' }}>Aggressive (High Risk)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="investment_horizon" class="form-label">Investment Horizon</label>
+                                    <select class="form-select" id="investment_horizon" name="investment_horizon" required>
+                                        <option value="short" {{ 'selected' if profile and profile.investment_horizon == 'short' else '' }}>Short-term (1-3 years)</option>
+                                        <option value="medium" {{ 'selected' if profile and profile.investment_horizon == 'medium' else '' }}>Medium-term (3-10 years)</option>
+                                        <option value="long" {{ 'selected' if profile and profile.investment_horizon == 'long' else '' }}>Long-term (10+ years)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="investment_experience" class="form-label">Investment Experience</label>
+                                    <select class="form-select" id="investment_experience" name="investment_experience" required>
+                                        <option value="beginner" {{ 'selected' if profile and profile.investment_experience == 'beginner' else '' }}>Beginner</option>
+                                        <option value="intermediate" {{ 'selected' if profile and profile.investment_experience == 'intermediate' else '' }}>Intermediate</option>
+                                        <option value="advanced" {{ 'selected' if profile and profile.investment_experience == 'advanced' else '' }}>Advanced</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="monthly_investment_capacity" class="form-label">Monthly Investment Capacity (₹)</label>
+                                    <input type="number" class="form-control" id="monthly_investment_capacity" name="monthly_investment_capacity" 
+                                           step="1000" min="0" placeholder="10000" 
+                                           value="{{ profile.monthly_investment_capacity if profile else '' }}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="emergency_fund" name="emergency_fund" 
+                                           {{ 'checked' if profile and profile.emergency_fund_available else '' }}>
+                                    <label class="form-check-label" for="emergency_fund">
+                                        I have an emergency fund (3-6 months of expenses)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                                    <i class="fas fa-times me-1"></i>Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>Save Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="recommendation-card">
+                    <h4><i class="fas fa-chart-pie me-2"></i>Recommended Allocation</h4>
+                    <p class="mb-3">{{ recommendations.description }}</p>
+                    
+                    <div class="allocation-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Equity</span>
+                            <span class="percentage">{{ recommendations.equity }}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="allocation-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Debt</span>
+                            <span class="percentage">{{ recommendations.debt }}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="allocation-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Gold</span>
+                            <span class="percentage">{{ recommendations.gold }}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="allocation-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Cash</span>
+                            <span class="percentage">{{ recommendations.cash }}%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-info-circle me-2"></i>Risk Levels Explained
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <span class="risk-level risk-conservative">Conservative</span>
+                            <p class="small mt-2">Low risk, stable returns. Suitable for short-term goals and capital preservation.</p>
+                        </div>
+                        <div class="mb-3">
+                            <span class="risk-level risk-moderate">Moderate</span>
+                            <p class="small mt-2">Balanced approach with moderate risk and growth potential. Good for medium-term goals.</p>
+                        </div>
+                        <div class="mb-3">
+                            <span class="risk-level risk-aggressive">Aggressive</span>
+                            <p class="small mt-2">High growth potential with higher risk. Suitable for long-term goals and experienced investors.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.querySelector('.theme-icon');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        const currentTheme = localStorage.getItem('theme') || 
+                            (prefersDarkScheme.matches ? 'dark' : 'light');
+        
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = '🌙';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            let theme;
+            if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                theme = 'light';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '🌙';
+                theme = 'dark';
+            }
+            localStorage.setItem('theme', theme);
+        });
+
+        // Update recommendations when risk tolerance changes
+        document.getElementById('risk_tolerance').addEventListener('change', function() {
+            // This would typically make an AJAX call to update recommendations
+            // For now, we'll just show a message
+            console.log('Risk tolerance changed to:', this.value);
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
